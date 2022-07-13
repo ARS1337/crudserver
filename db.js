@@ -31,8 +31,7 @@ const queryResolver = async (query) => {
 };
 
 const getListOfTodo = async (user) => {
-  let user1 = "abhay";
-  let query = `select * from todolist where username = '${user1}'`;
+  let query = `select * from todolist where username = '${user}'`;
   let result = await queryResolver(query);
   return result;
 };
@@ -43,8 +42,8 @@ const setTodo = async (user, todo, status) => {
   return result;
 };
 
-const updateTodo = async (id, todo, status) => {
-  let query = `update todolist set todo = '${todo}', status = '${status}' where id ='${id}';`;
+const updateTodo = async (id, todo) => {
+  let query = `update todolist set todo = '${todo}' where id ='${id}';`;
   let result = await queryResolver(query);
   return result;
 };

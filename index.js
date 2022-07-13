@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+const cors = require("cors")
 const { body, validationResult } = require("express-validator");
 const {
   getListOfTodo,
@@ -12,6 +13,8 @@ const {
   isLoginValid,
   addUser,
 } = require("./db");
+
+app.use(cors())
 
 app.use(bodyParser.json());
 
@@ -32,7 +35,7 @@ app.post(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(200).json({ errors: errors.array(),success:0 });
     } else {
       res.status(200).send({ success: 1, error: 0 });
     }
@@ -53,7 +56,7 @@ app.post(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(200).json({ errors: errors.array(),success:0});
     } else {
       let user = req.body.user;
       let pwd = req.body.pwd;
@@ -63,7 +66,7 @@ app.post(
   }
 );
 
-app.get("/getalltodos", async (req, res) => {
+app.post("/getalltodos", async (req, res) => {
   //return all the todos for a particular user
   let user = req.body.user;
   let result = await getListOfTodo(user);
@@ -83,14 +86,12 @@ app.post("/updatetodo", async (req, res) => {
   //edit the todo based on id
   let id = req.body.id;
   let newTodo = req.body.newTodo;
-  let status = req.body.status;
-  let result = await updateTodo(id, newTodo, status);
+  let result = await updateTodo(id, newTodo);
   res.status(result.status).send(result);
 });
 
 app.post("/removetodo", async (req, res) => {
   //remove a todo based on id
-  let user = req.body.user;
   let id = req.body.id;
   let result = await removeTodo(id);
   res.status(result.status).send(result);
